@@ -1,8 +1,10 @@
 ﻿using StockAnalyzer.Core.Domain;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
@@ -30,8 +32,8 @@ namespace StockAnalyzer.Windows
                 { "GOOGL", Generate("GOOGL") },
                 { "PS", Generate("PS") },
                 { "AMAZ", Generate("AMAZ") },
-                //{ "ABC", Generate("ABC") },
-                //{ "DEF", Generate("DEF") }
+                { "ABC", Generate("ABC") },
+                { "DEF", Generate("DEF") }
             };
 
             // step -1. This will create bad user experience
@@ -46,9 +48,12 @@ namespace StockAnalyzer.Windows
             //var t = new Thread(() =>
             //{
             //    var msft = Calculate(stocks["MSFT"]);
+            //    var googl = Calculate(stocks["GOOGL"]);
+            //    var ps = Calculate(stocks["PS"]);
+            //    var amaz = Calculate(stocks["AMAZ"]);
             //    Dispatcher.Invoke(() =>
             //    {
-            //        Stocks.ItemsSource = new[] { msft };
+            //        Stocks.ItemsSource = new[] { msft, googl, ps, amaz };
             //    });
             //});
             //t.Name = "My Thread";
@@ -171,24 +176,24 @@ namespace StockAnalyzer.Windows
             //                bag.Add(msft);
             //                throw new Exception("MSFT");
             //            },
-            //        () =>
-            //        {
-            //            var msft = Calculate(stocks["GOOGL"]);
-            //            bag.Add(msft);
-            //            throw new Exception("MSFT");
-            //        },
-            //        () =>
-            //        {
-            //            var msft = Calculate(stocks["PS"]);
-            //            bag.Add(msft);
-            //            throw new Exception("MSFT");
-            //        },
-            //        () =>
-            //        {
-            //            var msft = Calculate(stocks["AMAZ"]);
-            //            bag.Add(msft);
-            //            throw new Exception("MSFT");
-            //        });
+            //            () =>
+            //            {
+            //                var msft = Calculate(stocks["GOOGL"]);
+            //                bag.Add(msft);
+            //                throw new Exception("MSFT");
+            //            },
+            //            () =>
+            //            {
+            //                var msft = Calculate(stocks["PS"]);
+            //                bag.Add(msft);
+            //                throw new Exception("MSFT");
+            //            },
+            //            () =>
+            //            {
+            //                var msft = Calculate(stocks["AMAZ"]);
+            //                bag.Add(msft);
+            //                throw new Exception("MSFT");
+            //            });
             //        }
             //        catch (Exception ex)
             //        {
@@ -215,10 +220,10 @@ namespace StockAnalyzer.Windows
             //    });
 
             //    //Parallel.For(0, stocks.Count, (i) =>
-            //    //  {
-            //    //      var result = Calculate(stocks.ElementAt(i).Value);
-            //    //      bag.Add(result);
-            //    //  });
+            //    //{
+            //    //    var result = Calculate(stocks.ElementAt(i).Value);
+            //    //    bag.Add(result);
+            //    //});
             //});
 
             //Stocks.ItemsSource = bag;

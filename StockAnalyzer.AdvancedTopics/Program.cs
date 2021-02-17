@@ -64,6 +64,7 @@ namespace StockAnalyzer.AdvancedTopics
             //var result = Enumerable.Range(0, 100)
             //    .AsParallel()
             //    .AsOrdered()
+            //    .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
             //    .WithDegreeOfParallelism(1)
             //    .WithCancellation(new CancellationToken(canceled: true))
             //    .Select(Compute)

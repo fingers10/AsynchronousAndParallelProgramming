@@ -135,32 +135,39 @@ namespace StockAnalyzer.Windows
             // step -6. combining asynchronous programming and parallel programming
             // if we move parallel operation to a separate thread that means that thread will not be available 
             // for doing parallel operation. This is a trade off that we need to consider.
-            //var bag = new ConcurrentBag<StockCalculation>();
-            //await Task.Run(() =>
-            //{
-            //    Parallel.Invoke(() =>
-            //    {
-            //        var msft = Calculate(stocks["MSFT"]);
-            //        bag.Add(msft);
-            //    },
-            //    () =>
-            //    {
-            //        var msft = Calculate(stocks["GOOGL"]);
-            //        bag.Add(msft);
-            //    },
-            //    () =>
-            //    {
-            //        var msft = Calculate(stocks["PS"]);
-            //        bag.Add(msft);
-            //    },
-            //    () =>
-            //    {
-            //        var msft = Calculate(stocks["AMAZ"]);
-            //        bag.Add(msft);
-            //    });
-            //});
+            var bag = new ConcurrentBag<StockCalculation>();
+            Debug.WriteLine($"Main Thread ID - {Thread.CurrentThread.ManagedThreadId}");
+            await Task.Run(() =>
+            {
+                Debug.WriteLine($"Async Task Thread ID - {Thread.CurrentThread.ManagedThreadId}");
 
-            //Stocks.ItemsSource = bag;
+                Parallel.Invoke(() =>
+                {
+                    Debug.WriteLine($"MSFT Thread ID - {Thread.CurrentThread.ManagedThreadId}");
+                    var msft = Calculate(stocks["MSFT"]);
+                    bag.Add(msft);
+                },
+                () =>
+                {
+                    Debug.WriteLine($"GOOGL Thread ID - {Thread.CurrentThread.ManagedThreadId}");
+                    var googl = Calculate(stocks["GOOGL"]);
+                    bag.Add(googl);
+                },
+                () =>
+                {
+                    Debug.WriteLine($"PS Thread ID - {Thread.CurrentThread.ManagedThreadId}");
+                    var ps = Calculate(stocks["PS"]);
+                    bag.Add(ps);
+                },
+                () =>
+                {
+                    Debug.WriteLine($"AMAZ Thread ID - {Thread.CurrentThread.ManagedThreadId}");
+                    var amaz = Calculate(stocks["AMAZ"]);
+                    bag.Add(amaz);
+                });
+            });
+
+            Stocks.ItemsSource = bag;
 
             // step -7. Handling exceptions
             //var bag = new ConcurrentBag<StockCalculation>();
@@ -227,6 +234,9 @@ namespace StockAnalyzer.Windows
             //});
 
             //Stocks.ItemsSource = bag;
+
+            // async await antipatterns
+            //https://markheath.net/post/async-antipatterns
 
             AfterLoadingStockData();
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -8,7 +10,10 @@ namespace StockAnalyzer.AdvancedTopics
 {
     class Program
     {
-        static void Main(string[] args)
+        static object syncRoot = new object();
+        static object lock1 = new object();
+        static object lock2 = new object();
+        static async Task Main(string[] args)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -71,6 +76,89 @@ namespace StockAnalyzer.AdvancedTopics
             //    .Take(10);
 
             //result.ForAll(Console.WriteLine);
+
+            //decimal total = 0;
+            //for (int i = 0; i < 100; i++)
+            //{
+            //    total += Compute(i);
+            //}
+
+            //Console.WriteLine(total);
+
+            //decimal total = 0;
+            //Parallel.For(0, 100, (i) =>
+            //{
+            //    total += Compute(i);
+            //});
+
+            //Console.WriteLine(total);
+
+            //decimal total = 0;
+            //Parallel.For(0, 100, (i) =>
+            //{
+            //    lock (syncRoot)
+            //    {
+            //        total += Compute(i);
+            //    }
+            //});
+
+            //Console.WriteLine(total);
+
+            //decimal total = 0;
+            //Parallel.For(0, 100, (i) =>
+            //{
+            //    var result = Compute(i);
+            //    lock (syncRoot)
+            //    {
+            //        total += result;
+            //    }
+            //});
+
+            //Console.WriteLine(total);
+
+            //int total = 0;
+            //Parallel.For(0, 100, (i) =>
+            //{
+            //    var result = Compute(i);
+            //    Interlocked.Add(ref total, (int)result);
+            //});
+
+            //Console.WriteLine(total);
+
+            //var t1 = Task.Run(() =>
+            //{
+            //    lock (lock1)
+            //    {
+            //        Thread.Sleep(1);
+            //        lock (lock2)
+            //        {
+            //            Console.WriteLine("Hello");
+            //        }
+            //    }
+            //});
+            //var t2 = Task.Run(() =>
+            //{
+            //    lock (lock2)
+            //    {
+            //        Thread.Sleep(1);
+            //        lock (lock1)
+            //        {
+            //            Console.WriteLine("World!");
+            //        }
+            //    }
+            //});
+
+            //await Task.WhenAll(t1, t2);
+
+            var queue = new Queue();
+            queue.Enqueue(1);
+            queue.Dequeue();
+            queue.Peek();
+
+            var concurrentQueue = new ConcurrentQueue<int>();
+            concurrentQueue.Enqueue(1);
+            var success = concurrentQueue.TryDequeue(out var result);
+            success = concurrentQueue.TryPeek(out result);
 
             Console.WriteLine($"It took: {stopwatch.ElapsedMilliseconds}ms to run");
         }
